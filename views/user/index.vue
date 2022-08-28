@@ -4,12 +4,12 @@
       :title="operateType === 'add' ? '新增用户' : '更新用户'"
       :visible.sync="isShow"
     >
-      <common-form
-        :formLabel="operateFormLabel"
+      <!-- <common-form
+        :operateFormLabel="operateFormLabel"
         :form.sync="operateForm"
         :inline="true"
         ref="form"
-      ></common-form>
+      ></common-form> -->
       <div slot="footer" class="dialog-footer">
         <el-button @click="isShow === false">取消</el-button>
         <el-button type="primary" @click="confirm">确定</el-button>
@@ -26,7 +26,7 @@
         <el-button type="primary" @click="getList(searchForm.keyword)">搜索</el-button>
       </common-form>
     </div>
-    <common-table
+    <!-- <common-table
       :tableData="tableData"
       :tableLabel="tableLabel"
       :config="config"
@@ -34,7 +34,7 @@
       @edit="editUser"
       @del="delUser"
     >
-    </common-table>
+    </common-table> -->
   </div>
 </template>
 
@@ -106,6 +106,7 @@ export default {
       searchForm: {
         keyword: "",
       },
+      // 表格相关
       tableData: [],
       tableLabel: [
         {
@@ -139,7 +140,7 @@ export default {
     };
   },
   mounted() {
-    // this.getList()
+    this.getList()
   },
   methods: {
     confirm() {
@@ -159,6 +160,23 @@ export default {
         });
       }
     },
+    getList(name = "") {
+      this.config.loading = true;
+      name ? (this.config.page = 1) : "";
+      getUser({
+        page: this.config.page,
+        name,
+      }).then(({ data: res }) => {
+        console.log(res);
+        // 解构赋值
+        this.tableData = res.list.map((item) => {
+          item.sexLabel = item.sex === 0 ? "男" : "女";
+          return item;
+        });
+        this.config.total = res.count;
+        this.config.loading = false;
+      });
+    },
     addUser() {
       this.isShow = true;
       this.operateType = "add";
@@ -169,22 +187,6 @@ export default {
         birth: "",
         sex: "",
       };
-    },
-    getList(name = "") {
-      this.config.loading = true;
-      name ? (this.config.page = 1) : "";
-      getUser({
-        page: this.config.page,
-        name,
-      }).then(({ data: res }) => {
-        // 解构赋值
-        this.tableData = res.list.map((item) => {
-          item.sexLabel = item.sex === 0 ? "男" : "女";
-          return item;
-        });
-        this.config.total = res.count;
-        this.config.loading = false;
-      });
     },
     // 提供给子组件调用的方法
     editUser(row) {

@@ -45,6 +45,9 @@ export default {
         config2: this.config
     }
   },
+  mounted() {
+    console.log(this.tableData);
+  },
   methods: {
     handleEdit(row) {
       // 调用父组件的方法

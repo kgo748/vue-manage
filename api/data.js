@@ -10,14 +10,14 @@ import axios from './axios'
 } */
 
 export const getData = () => {
-    // 默认时get请求
+    // 默认是get请求
     return axios.request({
         url: '/home/getData'
     })
 }
 
 export const getUser = (params) => {
-    // 默认时get请求
+    // 默认是get请求
     return axios.request({
         url: '/user/getUser',
         method: 'get',
